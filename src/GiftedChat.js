@@ -13,6 +13,7 @@ import { Animated, Platform, StyleSheet, View } from 'react-native';
 import ActionSheet from '@expo/react-native-action-sheet';
 import moment from 'moment';
 import uuid from 'uuid';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import * as utils from './utils';
 import Actions from './Actions';
@@ -301,6 +302,12 @@ class GiftedChat extends React.Component {
     this._messageContainerRef.scrollTo({ y: 0, animated });
   }
 
+  renderKeyboardSpacer() {
+    if (Platform.OS === 'android') {
+      return (<KeyboardSpacer />);
+    }
+    return null;
+  }
 
   renderMessages() {
     const AnimatedView = this.props.isAnimated === true ? Animated.View : View;
@@ -475,12 +482,15 @@ class GiftedChat extends React.Component {
   render() {
     if (this.state.isInitialized === true) {
       return (
-        <ActionSheet ref={(component) => (this._actionSheetRef = component)}>
-          <View style={styles.container} onLayout={this.onMainViewLayout}>
-            {this.renderMessages()}
-            {this.renderInputToolbar()}
-          </View>
-        </ActionSheet>
+        <View style={styles.container}>
+          <ActionSheet ref={(component) => (this._actionSheetRef = component)}>
+            <View style={styles.container} onLayout={this.onMainViewLayout}>
+              {this.renderMessages()}
+              {this.renderInputToolbar()}
+            </View>
+          </ActionSheet>
+          {this.renderKeyboardSpacer()}
+         </View>
       );
     }
     return (
